@@ -169,13 +169,14 @@ namespace ContactoApi.Controllers
         [Route("UpdateContacto/{IdContacto}")]
         public IActionResult UpdateContacto(int IdContacto, [FromBody] Contacto contactoActualizado)
         {
-            // Definimos la consulta de actualización
+            // Definimos la consulta de actualización, incluyendo el campo 'Leido'
             string Query = @"
                     UPDATE Contacto 
                     SET NombreCompleto = @NombreCompleto, 
                         Telefono = @Telefono, 
                         Mail = @Mail, 
-                        Mensaje = @Mensaje
+                        Mensaje = @Mensaje,
+                        Leido = @Leido
                     WHERE IdContacto = @IdContacto";
 
             using (SqlConnection sqlConn = new SqlConnection(_connectionString))
@@ -183,12 +184,13 @@ namespace ContactoApi.Controllers
                 sqlConn.Open();
                 using (SqlCommand sqlCm = new SqlCommand(Query, sqlConn))
                 {
-                    // Agregamos los parámetros con los valores actualizados
+                    // Agregamos los parámetros con los valores actualizados, incluido 'Leido'
                     sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto);
                     sqlCm.Parameters.AddWithValue("@NombreCompleto", contactoActualizado.NombreCompleto);
                     sqlCm.Parameters.AddWithValue("@Telefono", contactoActualizado.Telefono);
                     sqlCm.Parameters.AddWithValue("@Mail", contactoActualizado.Mail);
                     sqlCm.Parameters.AddWithValue("@Mensaje", contactoActualizado.Mensaje);
+                    sqlCm.Parameters.AddWithValue("@Leido", contactoActualizado.Leido);
 
                     // Ejecutamos la consulta de actualización
                     int rowsAffected = sqlCm.ExecuteNonQuery();
@@ -205,6 +207,7 @@ namespace ContactoApi.Controllers
                 }
             }
         }
+
 
 
 
