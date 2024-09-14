@@ -134,5 +134,79 @@ namespace ContactoApi.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("DeleteContacto/{IdContacto}")]
+        public IActionResult DeleteContacto(int IdContacto)
+        {
+            // Definimos la consulta de eliminación por IdContacto
+            string Query = "DELETE FROM Contacto WHERE IdContacto = @IdContacto";
+
+            using (SqlConnection sqlConn = new SqlConnection(_connectionString))
+            {
+                sqlConn.Open();
+                using (SqlCommand sqlCm = new SqlCommand(Query, sqlConn))
+                {
+                    // Agregamos el parámetro @IdContacto a la consulta SQL
+                    sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto);
+
+                    // Ejecutamos la consulta de eliminación
+                    int rowsAffected = sqlCm.ExecuteNonQuery();
+
+                    // Verificamos si el contacto fue eliminado correctamente
+                    if (rowsAffected > 0)
+                    {
+                        return Ok("Contacto eliminado correctamente");
+                    }
+                    else
+                    {
+                        return NotFound("Contacto no encontrado");
+                    }
+                }
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateContacto/{IdContacto}")]
+        public IActionResult UpdateContacto(int IdContacto, [FromBody] Contacto contactoActualizado)
+        {
+            // Definimos la consulta de actualización
+            string Query = @"
+                    UPDATE Contacto 
+                    SET NombreCompleto = @NombreCompleto, 
+                        Telefono = @Telefono, 
+                        Mail = @Mail, 
+                        Mensaje = @Mensaje
+                    WHERE IdContacto = @IdContacto";
+
+            using (SqlConnection sqlConn = new SqlConnection(_connectionString))
+            {
+                sqlConn.Open();
+                using (SqlCommand sqlCm = new SqlCommand(Query, sqlConn))
+                {
+                    // Agregamos los parámetros con los valores actualizados
+                    sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto);
+                    sqlCm.Parameters.AddWithValue("@NombreCompleto", contactoActualizado.NombreCompleto);
+                    sqlCm.Parameters.AddWithValue("@Telefono", contactoActualizado.Telefono);
+                    sqlCm.Parameters.AddWithValue("@Mail", contactoActualizado.Mail);
+                    sqlCm.Parameters.AddWithValue("@Mensaje", contactoActualizado.Mensaje);
+
+                    // Ejecutamos la consulta de actualización
+                    int rowsAffected = sqlCm.ExecuteNonQuery();
+
+                    // Verificamos si la actualización fue exitosa
+                    if (rowsAffected > 0)
+                    {
+                        return Ok("Contacto actualizado correctamente");
+                    }
+                    else
+                    {
+                        return NotFound("Contacto no encontrado");
+                    }
+                }
+            }
+        }
+
+
+
     }
 }
