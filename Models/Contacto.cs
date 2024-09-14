@@ -19,7 +19,7 @@ namespace ContactoApi.Models
         [Required(ErrorMessage = "El mensaje es obligatorio.")]
         public string Mensaje { get; set; }
 
-        public string FechaEnvioMensaje { get; set; }
+        public string? FechaEnvioMensaje { get; set; } //Este campo lo marcamos como opcional dado que es autocompletado por un Trigger
 
         public bool Leido {  get; set; }
 
