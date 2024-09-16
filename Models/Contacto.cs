@@ -23,5 +23,7 @@ namespace ContactoApi.Models
 
         public bool Leido {  get; set; }
 
+        public string? FechaMensajeLeido { get; set; } //Este campo lo marcamos como opcional dado que es autocompletado por un Trigger
+
     }
 }
