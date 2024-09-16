@@ -44,6 +44,8 @@ namespace ContactoApi.Controllers
                 var valorLeido = dr[6].ToString();
                 contacto.Leido = bool.TryParse(valorLeido, out bool resultado) ? resultado : false;
                 lc.Add(contacto);
+
+
             }
             sqlConn.Close();
             return lc; 
@@ -52,7 +54,7 @@ namespace ContactoApi.Controllers
 
         [HttpGet]
         [Route("GetContactos/{IdContacto?}")] // Filtramos por IdContacto
-        public List<Contacto> GetContactos(int? IdContacto = null)
+        public List<Contacto> GetContactoId(int? IdContacto = null)
         {
             List<Contacto> lc = new List<Contacto>();
 
@@ -191,6 +193,8 @@ namespace ContactoApi.Controllers
                     sqlCm.Parameters.AddWithValue("@Mail", contactoActualizado.Mail);
                     sqlCm.Parameters.AddWithValue("@Mensaje", contactoActualizado.Mensaje);
                     sqlCm.Parameters.AddWithValue("@Leido", contactoActualizado.Leido);
+
+                    
 
                     // Ejecutamos la consulta de actualización
                     int rowsAffected = sqlCm.ExecuteNonQuery();
