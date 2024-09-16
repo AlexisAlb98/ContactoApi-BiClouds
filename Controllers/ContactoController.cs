@@ -10,7 +10,6 @@ namespace ContactoApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ContactoController : ControllerBase
     {
         private readonly string _connectionString;
