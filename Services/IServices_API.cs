@@ -6,8 +6,8 @@ namespace ContactoApi.Services
     public interface IServices_API
     {
         //en esta carpeta de servicios se va a implementar toda la logica de ejecución de nuestras APIS
-        Task<List<Contacto>> GetContactos();
-        Task<Contacto> GetContactoId(int IdContacto);
+        Task<List<Contacto>> GetListaContactos();
+        Task<Contacto> GetIdContacto(int IdContacto);
         Task<bool> InsertContacto(Contacto objeto);
         Task<bool> UpdateContacto(Contacto objeto);
         Task<bool> DeleteContacto(int IdContacto);

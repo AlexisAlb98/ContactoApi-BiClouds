@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ContactoApi.Models;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,6 +10,7 @@ namespace ContactoApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ContactoController : ControllerBase
     {
         private readonly string _connectionString;
@@ -20,8 +22,8 @@ namespace ContactoApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetContactos")]
-        public List<Contacto> GetContactos()
+        [Route("GetListaContactos")]
+        public List<Contacto> GetListaContacto()
         {
             List<Contacto> lc = new List<Contacto>();
 
@@ -53,8 +55,8 @@ namespace ContactoApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetContactos/{IdContacto?}")] // Filtramos por IdContacto
-        public List<Contacto> GetContactoId(int? IdContacto = null)
+        [Route("GetContacto/{IdContacto?}")] // Filtramos por IdContacto
+        public List<Contacto> GetIdContacto(int? IdContacto = null)
         {
             List<Contacto> lc = new List<Contacto>();
 

@@ -5,14 +5,14 @@ using System.Text;
 
 namespace ContactoApi.Services
 {
-    public class Services_API
+    public class Services_API : IServices_API
     {
         //En esta carpeta va a estar toda la logica (codigo) de cada método declarado en la interface Services_API
 
         private static string _usuario;
         private static string _clave;
         private static string _baseUrl;
-        private static string token;
+        private static string _token;
 
         public Services_API()
         {
@@ -44,14 +44,65 @@ namespace ContactoApi.Services
             var content = new StringContent(JsonConvert.SerializeObject(credenciales),Encoding.UTF8, "application/json");
 
             //ejecutar la URL de autenticacion/validar
-            var response = await cliente.PostAync("api/Autenticacion/Validar", content);//le pasamos el contenido donde estan nuestras credenciales 
+            var response = await cliente.PostAsync("api/Autenticacion/Validar", content);//le pasamos el contenido donde estan nuestras credenciales 
+            //define el json de respuesta (que es lo que necesita nuestra api, ya que se va a consumir
+            var json_respuesta = await response.Content.ReadAsStringAsync();
 
+            //el resultado de nuestra respuesta lo convierte a un archivo Json
+            var resultado = JsonConvert.DeserializeObject<ResultadoCredencial>(json_respuesta);
 
+            //guardamos el token de la variable resultado en la variable _token
+            _token = resultado.token;
 
+        }
+
+        //implementacion de los metodos creados en IServices (interface)
+
+        public async Task<List<Contacto>> GetListaContactos()
+        {
+            List<Contacto> lista = new List<Contacto>();
+
+            await Autenticacion();
+
+            var cliente = new HttpClient();
+            cliente.BaseAddress=new Uri(_baseUrl);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Barer", _token);
+            var response = await cliente.GetAsync("api/Contacto/GetListaContactos");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<ResultadoApi>(json_respuesta);
+                lista = resultado.Lista;
+            }
+
+            return lista;
         }
 
 
 
 
+
+
+        public Task<bool> DeleteContacto(int IdContacto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Contacto> GetIdContacto(int IdContacto)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<bool> InsertContacto(Contacto objeto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateContacto(Contacto objeto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
