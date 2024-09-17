@@ -1,0 +1,7 @@
+{
+    "NombreCompleto": "Ejemplo",
+    "Telefono": "123456789",
+    "Mail": "prueba@ejemplo.com",
+    "Mensaje": "Probando que actualize el campo Leido",
+    "Leido": true
+}

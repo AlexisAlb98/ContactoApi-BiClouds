@@ -26,7 +26,7 @@ namespace ContactoApi.Controllers
         {
             List<Contacto> lc = new List<Contacto>();
 
-            string Query= "Select IdContacto,NombreCompleto,Telefono,Mail,Mensaje,FechaEnvioMensaje,Leido from Contacto\r\n";
+            string Query= "Select IdContacto,NombreCompleto,Telefono,Mail,Mensaje,FechaEnvioMensaje,Leido, FechaMensajeLeido from Contacto";
 
             SqlConnection sqlConn = new SqlConnection(_connectionString);
             sqlConn.Open();
@@ -44,6 +44,7 @@ namespace ContactoApi.Controllers
                 contacto.FechaEnvioMensaje = dr[5].ToString();
                 var valorLeido = dr[6].ToString();
                 contacto.Leido = bool.TryParse(valorLeido, out bool resultado) ? resultado : false;
+                contacto.FechaMensajeLeido = dr[7].ToString();
                 lc.Add(contacto);
 
 
@@ -60,7 +61,7 @@ namespace ContactoApi.Controllers
             List<Contacto> lc = new List<Contacto>();
 
             // Consulta SQL modificada para filtrar el IdContacto
-            string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido from Contacto";
+            string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido from Contacto";
 
             if (IdContacto.HasValue)
             {
@@ -91,6 +92,7 @@ namespace ContactoApi.Controllers
                             contacto.FechaEnvioMensaje = dr[5].ToString();
                             var valorLeido = dr[6].ToString();
                             contacto.Leido = bool.TryParse(valorLeido, out bool resultado) ? resultado : false;
+                            contacto.FechaMensajeLeido = dr[7].ToString();
 
                             lc.Add(contacto);
                         }

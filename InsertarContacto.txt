@@ -3,4 +3,5 @@
     "Telefono": "123456789",
     "Mail": "juan.perez@example.com",
     "Mensaje": "Este es un mensaje de prueba",
+    "Leido": True
 }
