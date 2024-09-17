@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace ContactoApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ContactoController : ControllerBase
     {

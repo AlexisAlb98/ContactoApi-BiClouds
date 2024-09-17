@@ -24,9 +24,6 @@ namespace ContactoApi.Services
             _clave = builder.GetSection("ApiSettings:clave").Value;
             _baseUrl = builder.GetSection("ApiSettings:baseUrl").Value;
 
-
-
-
         }
 
         public async Task Autenticacion()
@@ -45,6 +42,7 @@ namespace ContactoApi.Services
 
             //ejecutar la URL de autenticacion/validar
             var response = await cliente.PostAsync("api/Autenticacion/Validar", content);//le pasamos el contenido donde estan nuestras credenciales 
+           
             //define el json de respuesta (que es lo que necesita nuestra api, ya que se va a consumir
             var json_respuesta = await response.Content.ReadAsStringAsync();
 
@@ -78,6 +76,7 @@ namespace ContactoApi.Services
 
             return lista;
         }
+
 
 
 
