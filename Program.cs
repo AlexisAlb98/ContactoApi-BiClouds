@@ -10,21 +10,21 @@ builder.Configuration.AddJsonFile("appsettings.json");
 var secretkey = builder.Configuration.GetSection("settings").GetSection("secretkey").ToString();
 var keyBytes = Encoding.UTF8.GetBytes(secretkey);
 
-builder.Services.AddAuthentication(config =>
+builder.Services.AddAuthentication(config =>  // Añadimos el servicio de autenticación, configurandolo para usar JWT Bearer
 {
-    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;// Establecimos el esquema de autenticación por defecto como JWT Bearer
     config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-}).AddJwtBearer(config =>
+}).AddJwtBearer(config => // Configuramos los parametros específicos para el esquema JWT Bearer
 {
-    config.RequireHttpsMetadata = false;
-    config.SaveToken = true;
-    config.TokenValidationParameters = new TokenValidationParameters
+    config.RequireHttpsMetadata = false;// aca deshabilitamos el requerimiento de HTTPS para tokens (mnas que nada porque estamos en un entorno de desarrollo)
+    config.SaveToken = true;// Indicamos que el token validado debe ser guardado para, mas adelante, usarlo en nuestro codigo
+    config.TokenValidationParameters = new TokenValidationParameters // Definimos los parámetros para la validación del token
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
-        ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateIssuerSigningKey = true,// Habilitamos la validación de la firma del token
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes), // Utilizamos la llave secreta (convertida a bytes) para validar la firma del token
+        ValidateIssuer = false,//no validamos el issuer 
+        ValidateAudience = false//tampoco validamos la audiencia
     };
 });
 

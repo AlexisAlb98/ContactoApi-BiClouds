@@ -17,7 +17,7 @@ namespace ContactoApi.Controllers
 
         public ContactoController(IConfiguration configuration)
         {
-            // Aquí obtienes la cadena de conexión del archivo appsettings.json
+           
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
@@ -56,17 +56,17 @@ namespace ContactoApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetContacto/{IdContacto?}")] // Filtramos por IdContacto
+        [Route("GetContacto/{IdContacto?}")] 
         public List<Contacto> GetIdContacto(int? IdContacto = null)
         {
             List<Contacto> lc = new List<Contacto>();
 
-            // Consulta SQL modificada para filtrar el IdContacto
+      
             string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido from Contacto";
 
             if (IdContacto.HasValue)
             {
-                Query += " WHERE IdContacto = @IdContacto"; // Filtra por IdContacto
+                Query += " WHERE IdContacto = @IdContacto"; 
             }
 
             using (SqlConnection sqlConn = new SqlConnection(_connectionString))
@@ -76,7 +76,7 @@ namespace ContactoApi.Controllers
                 {
                     if (IdContacto.HasValue)
                     {
-                        // Agrega el parámetro a la consulta SQL
+                   
                         sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto.Value);
                     }
 
@@ -118,7 +118,7 @@ namespace ContactoApi.Controllers
                 sqlConn.Open();
                 using (SqlCommand sqlCm = new SqlCommand(Query, sqlConn))
                 {
-                    // Añadimos los parámetros sin los dos últimos campos, por lo antes mensionado.
+                    // Añadimos los parámetros sin los dos últimos campos, por lo antes mencionado.
                     sqlCm.Parameters.AddWithValue("@NombreCompleto", nuevoContacto.NombreCompleto);
                     sqlCm.Parameters.AddWithValue("@Telefono", nuevoContacto.Telefono);
                     sqlCm.Parameters.AddWithValue("@Mail", nuevoContacto.Mail);
