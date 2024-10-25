@@ -11,11 +11,11 @@ namespace ContactoApi.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class ContactoController : ControllerBase
+    public class ContactoAPIController : ControllerBase
     {
         private readonly string _connectionString;
 
-        public ContactoController(IConfiguration configuration)
+        public ContactoAPIController(IConfiguration configuration)
         {
            
             _connectionString = configuration.GetConnectionString("DefaultConnection");
