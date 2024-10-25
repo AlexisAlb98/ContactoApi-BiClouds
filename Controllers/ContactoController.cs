@@ -56,44 +56,40 @@ namespace ContactoApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetContacto/{IdContacto?}")] 
-        public List<Contacto> GetIdContacto(int? IdContacto = null)
+        [Route("GetContacto/{IdContacto?}")]
+        public IActionResult GetIdContacto(int? IdContacto = null)
         {
-            List<Contacto> lc = new List<Contacto>();
-
-      
-            string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido from Contacto";
-
-            if (IdContacto.HasValue)
+            // Validar si no se proporciona un ID
+            if (!IdContacto.HasValue)
             {
-                Query += " WHERE IdContacto = @IdContacto"; 
+                return BadRequest("No hay un IdContacto señalado como parámetro");
             }
+
+            List<Contacto> lc = new List<Contacto>();
+            string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido from Contacto WHERE IdContacto = @IdContacto";
 
             using (SqlConnection sqlConn = new SqlConnection(_connectionString))
             {
                 sqlConn.Open();
                 using (SqlCommand sqlCm = new SqlCommand(Query, sqlConn))
                 {
-                    if (IdContacto.HasValue)
-                    {
-                   
-                        sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto.Value);
-                    }
+                    sqlCm.Parameters.AddWithValue("@IdContacto", IdContacto.Value);
 
                     using (SqlDataReader dr = sqlCm.ExecuteReader())
                     {
                         while (dr.Read())
                         {
-                            Contacto contacto = new Contacto();
-                            contacto.IdContacto = int.Parse(dr[0].ToString());
-                            contacto.NombreCompleto = dr[1].ToString();
-                            contacto.Telefono = dr[2].ToString();
-                            contacto.Mail = dr[3].ToString();
-                            contacto.Mensaje = dr[4].ToString();
-                            contacto.FechaEnvioMensaje = dr[5].ToString();
-                            var valorLeido = dr[6].ToString();
-                            contacto.Leido = bool.TryParse(valorLeido, out bool resultado) ? resultado : false;
-                            contacto.FechaMensajeLeido = dr[7].ToString();
+                            Contacto contacto = new Contacto
+                            {
+                                IdContacto = int.Parse(dr[0].ToString()),
+                                NombreCompleto = dr[1].ToString(),
+                                Telefono = dr[2].ToString(),
+                                Mail = dr[3].ToString(),
+                                Mensaje = dr[4].ToString(),
+                                FechaEnvioMensaje = dr[5].ToString(),
+                                Leido = bool.TryParse(dr[6].ToString(), out bool resultado) && resultado,
+                                FechaMensajeLeido = dr[7].ToString()
+                            };
 
                             lc.Add(contacto);
                         }
@@ -101,9 +97,9 @@ namespace ContactoApi.Controllers
                 }
             }
 
-            return lc;
+            return Ok(lc);
         }
-
+        
         [HttpPost]
         [Route("InsertContacto")]
         public IActionResult InsertContacto([FromBody] Contacto nuevoContacto)
