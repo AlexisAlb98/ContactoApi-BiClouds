@@ -1,6 +1,6 @@
 ﻿namespace ContactoApi.Models
 {
-    public class TokenResponse
+    public class TokenResponseAPI
     {
         public string token { get; set; }
     }

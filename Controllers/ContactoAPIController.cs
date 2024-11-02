@@ -23,9 +23,9 @@ namespace ContactoApi.Controllers
 
         [HttpGet]
         [Route("GetListaContactos")]
-        public List<Contacto> GetListaContacto()
+        public List<ContactoAPI> GetListaContacto()
         {
-            List<Contacto> lc = new List<Contacto>();
+            List<ContactoAPI> lc = new List<ContactoAPI>();
 
             string Query= "Select IdContacto,NombreCompleto,Telefono,Mail,Mensaje,FechaEnvioMensaje,Leido, FechaMensajeLeido from Contacto";
 
@@ -36,7 +36,7 @@ namespace ContactoApi.Controllers
 
             while (dr.Read())
             {
-                Contacto contacto = new Contacto();
+                ContactoAPI contacto = new ContactoAPI();
                 contacto.IdContacto = int.Parse(dr[0].ToString());
                 contacto.NombreCompleto = dr[1].ToString();
                 contacto.Telefono = dr[2].ToString();
@@ -65,8 +65,8 @@ namespace ContactoApi.Controllers
                 return BadRequest("No hay un IdContacto señalado como parámetro");
             }
 
-            List<Contacto> lc = new List<Contacto>();
-            string Query = "Select IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido from Contacto WHERE IdContacto = @IdContacto";
+            ContactoAPI contacto = null; // Cambiar de List<ContactoAPI> a un solo objeto ContactoAPI
+            string Query = "SELECT IdContacto, NombreCompleto, Telefono, Mail, Mensaje, FechaEnvioMensaje, Leido, FechaMensajeLeido FROM Contacto WHERE IdContacto = @IdContacto";
 
             using (SqlConnection sqlConn = new SqlConnection(_connectionString))
             {
@@ -77,9 +77,10 @@ namespace ContactoApi.Controllers
 
                     using (SqlDataReader dr = sqlCm.ExecuteReader())
                     {
-                        while (dr.Read())
+                        // Leer el primer registro
+                        if (dr.Read())
                         {
-                            Contacto contacto = new Contacto
+                            contacto = new ContactoAPI
                             {
                                 IdContacto = int.Parse(dr[0].ToString()),
                                 NombreCompleto = dr[1].ToString(),
@@ -90,19 +91,23 @@ namespace ContactoApi.Controllers
                                 Leido = bool.TryParse(dr[6].ToString(), out bool resultado) && resultado,
                                 FechaMensajeLeido = dr[7].ToString()
                             };
-
-                            lc.Add(contacto);
                         }
                     }
                 }
             }
 
-            return Ok(lc);
+            // Retornar el contacto encontrado o un 404 si no se encontró
+            if (contacto == null)
+            {
+                return NotFound("No se encontró un contacto con el Id proporcionado.");
+            }
+
+            return Ok(contacto); // Devuelve el contacto encontrado
         }
-        
+
         [HttpPost]
         [Route("InsertContacto")]
-        public IActionResult InsertContacto([FromBody] Contacto nuevoContacto)
+        public IActionResult InsertContacto([FromBody] ContactoAPI nuevoContacto)
         {
             // Definimos la consulta de inserción sin FechaEnvioMensaje y Leido dado que el primero se autocompleta por medio de un Trigger y el segundo es 0 por default.
             string Query = @"
@@ -169,7 +174,7 @@ namespace ContactoApi.Controllers
 
         [HttpPut]
         [Route("UpdateContacto/{IdContacto}")]
-        public IActionResult UpdateContacto(int IdContacto, [FromBody] Contacto contactoActualizado)
+        public IActionResult UpdateContacto(int IdContacto, [FromBody] ContactoAPI contactoActualizado)
         {
             // Definimos la consulta de actualización, incluyendo el campo 'Leido'
             string Query = @"

@@ -20,7 +20,7 @@ namespace ContactoApi.Controllers
 
         [HttpPost]
         [Route("Validar")]
-        public IActionResult Validar([FromBody] Usuario request)
+        public IActionResult Validar([FromBody] UsuarioAPI request)
         {
             if (request.user=="Admin123" && request.password == "123")//Vsalidamos que el usuario y la clave (que están hardcodeados) sean correctos
             {

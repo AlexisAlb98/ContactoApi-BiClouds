@@ -2,7 +2,7 @@
 
 namespace ContactoApi.Models
 {
-    public class Contacto
+    public class ContactoAPI
     {
         public int IdContacto { get; set; }
 
